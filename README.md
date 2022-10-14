@@ -43,7 +43,13 @@ Para evitar el conflicto entre distintos proyectos de python y distintas version
 Para ello, abrirá una consola de comandos en la carpeta raíz del proyecto.
 Desde ahora se asumirá que se esta en un entorno ***Windows***, no obstante, si se en otro entorno, siempre puede [buscar la equivalencia de comandos🔗](https://www.google.com).
 
-En el cmd usara el comando:
+El primer paso es instalar el modulo que permite crear entornos virtuales, esto mediante el comando:
+`pip install virtualenv`
+
+Se puede comprobar si se instalo correctamente utilizando el comando 
+`virtualenv --version`
+
+En el cmd, ubicado en la carpeta raiz del proyecto usara el comando:
 > `virtualenv env`
 
 Esto creara un entorno virtual en la carpeta ``env`` (Puede personalizar el nombre de la carpeta modificando el comando).
