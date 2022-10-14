@@ -1,5 +1,6 @@
 from datetime import datetime
 from config import cursor
+import utils
 
 
 def SeleccionarCien():
@@ -40,20 +41,11 @@ def CargarDataFields():
         # ! BUSCAR TABLA EN DONDE SOLO HAYA NIVELES
         cursor.execute("SELECT NIVEL FROM ALUMNOS")
 
-        # cursor.description > (('ID', <class 'int'>), ('NOMBRE', <class 'str'>))
-        # cursor.fetchall > [('C', 1972), ('Python', 1991)]
-
         # Obtenemos una lista de cabeceras
-        listHeaders = []
-        for elemento in cursor.description:
-            listHeaders.append(elemento[0].lower())
+        listHeaders = utils.FirebirdGetHeaders(cursor.description)
 
-        # Obtenemos una lista de todos los valores
-        resultadoCursor = cursor.fetchall()
-        listValues = []
-        for valor in resultadoCursor:
-            if valor[0] not in listValues:
-                listValues.append(valor[0])
+        # Obtenemos una lista de todos los valores y los filtramos los duplicados
+        listValues = utils.FirebirdFilterDuplicates(cursor.fetchall())
 
         # inicializar las cabeceras como arrays y asignamos los valores
         resultadoDataFields[listHeaders[0]] = listValues
@@ -63,20 +55,10 @@ def CargarDataFields():
         cursor.execute(
             f"SELECT CODIGO_CORTO, PERIODO FROM CICLOS WHERE CODIGO_CORTO LIKE '{datetime.now().year}%'"
         )
-        # print(datetime.now().year)
 
-        listHeaders = []
-        for elemento in cursor.description:
-            listHeaders.append(elemento[0].lower())
+        listHeaders = utils.FirebirdGetHeaders(cursor.description)
 
-        resultadoCursor = cursor.fetchall()
-        listValues = []
-
-        for item in resultadoCursor:
-            dic = {}
-            for indice, valor in enumerate(item):
-                dic[listHeaders[indice]] = valor
-            listValues.append(dic)
+        listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
 
         resultadoDataFields[listHeaders[0]] = listValues
 
@@ -91,15 +73,9 @@ def CargarDataFields():
         cursor.execute("SELECT FIRST 200 CODIGOGRUPO FROM ALUMNOS_GRUPOS")
         # cursor.execute("SELECT CODIGOGRUPO FROM ALUMNOS_GRUPOS")
 
-        listHeaders = []
-        for item in cursor.description:
-            listHeaders.append(item[0].lower())
+        listHeaders = utils.FirebirdGetHeaders(cursor.description)
 
-        resultadoCursor = cursor.fetchall()
-        listValues = []
-        for valor in resultadoCursor:
-            if valor[0] not in listValues:
-                listValues.append(valor[0])
+        listValues = utils.FirebirdFilterDuplicates(cursor.fetchall())
 
         resultadoDataFields[listHeaders[0]] = listValues
 

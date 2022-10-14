@@ -62,18 +62,7 @@ def GenerarTickets(nivel, codigogrupo, periodo, mes):
                 dic[headersAlumnosCxc[indice]] = valor
             valuesAlumnosCxc.append(dic)
 
-        # ? MERGES
-
-        """ alum = list(
-            filter(lambda per: per["NUMEROALUMNO"] == 10230, resultadoAlumnosGrupos)
-        )
-        print(alum) # ==> [{'INICIAL': 2020, 'FINAL': 2021, 'NUMEROALUMNO': 10230}, {'INICIAL': 2020, 'FINAL': 2021, 'NUMEROALUMNO': 10230}, {'INICIAL': 2021, 'FINAL': 2021, 'NUMEROALUMNO': 10230}, {'INICIAL': 2022, 'FINAL': 2022, 'NUMEROALUMNO': 10230}, {'INICIAL': 2022, 'FINAL': 2022, 'NUMEROALUMNO': 10230}, {'INICIAL': 2022, 'FINAL': 2022, 'NUMEROALUMNO': 10230}]
-
-        alum = next(
-            item for item in resultadoAlumnosGrupos if item["NUMEROALUMNO"] == 10230
-        )
-        print(alum)  # ==> {'INICIAL': 2020, 'FINAL': 2021, 'NUMEROALUMNO': 10230} """
-
+        # ? MERGES    
         # * merged alumnos - alumnos_grupos
         mergedValues = []
         for item in valuesAlumnos:
