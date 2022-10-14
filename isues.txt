@@ -1,5 +1,0 @@
-Recordar poner como instalar virtualenv en la documentacion
-https://pypi.or◘g/project/virtualenv/
-
-Recordar poner que se debe instalar firebird 1.5 https://firebirdsql.org/en/firebird-1-5/
-Poner el link de la base de datos
