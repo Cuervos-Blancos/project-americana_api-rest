@@ -1,6 +1,6 @@
 # IMPORTACIONES
 from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import os
 import config
 from routes.datafields_routes import datafieldsRoutes
@@ -10,7 +10,8 @@ from routes.mobile_routes import mobileRoutes
 
 # CONFIGURACIONES E INICIO
 application = Flask(__name__)
-CORS(application)
+# CORS(application)
+cors = CORS(application, resources={r"/*": {"origins": "*"}})
 
 if os.getenv("ENV") == "DEVELOPMENT":
     application.config.from_object(config.DevelopmentConfig)
@@ -27,7 +28,6 @@ def route_not_found(err):
 # ERROR 405
 
 # INDEX ROUTE
-# @cross_origin
 @application.route("/", methods=["GET"])
 def Home():
     return (
@@ -44,8 +44,6 @@ def Home():
 
 
 # * ROUTES
-# CORS(app, resources={r"/api/*": {"origins": "http://localhost"}})
-# CORS(application, resources={r"/*"})
 application.register_blueprint(recibosRoutes)
 application.register_blueprint(datafieldsRoutes)
 application.register_blueprint(mobileRoutes)

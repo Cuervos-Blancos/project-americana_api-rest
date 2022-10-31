@@ -1,3 +1,14 @@
+# coding utf-8
+""" Modulo para las configuraciones de Flask y de la base de datos de Firebird 1.5
+
+Available functions:
+    - DevelopmentConfig: Configuración de desarrollo
+    - ProductionConfig: Configuración de producción
+
+Available const:
+    - cursor: Cursor de la conexión a la base de datos
+"""
+
 # IMPORTACIONES
 import os
 import firebirdsql
