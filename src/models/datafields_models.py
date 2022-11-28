@@ -33,50 +33,51 @@ def SeleccionarCien():
             return e
 
 
-def CargarDataFields():
+def CargarCiclos():
+    # ? CICLOS --> Ciclo: 2022/2023
+    # ! SELECCIONO LOS QUE EMPIEZAN POR ESTE AÑO
     with cursor:
-        resultadoDataFields = {}
-
-        # ? NIVELES --> Carreras
-        # ! BUSCAR TABLA EN DONDE SOLO HAYA NIVELES
-        cursor.execute("SELECT NIVEL FROM ALUMNOS")
-
-        # Obtenemos una lista de cabeceras
-        listHeaders = utils.FirebirdGetHeaders(cursor.description)
-
-        # Obtenemos una lista de todos los valores y los filtramos los duplicados
-        listValues = utils.FirebirdFilterDuplicates(cursor.fetchall())
-
-        # inicializar las cabeceras como arrays y asignamos los valores
-        resultadoDataFields[listHeaders[0]] = listValues
-
-        # ? CICLOS --> Ciclo: 2022/2023
-        # ! SELECCIONO LOS QUE EMPIEZAN POR ESTE AÑO
+        #   Ejecutamos la consulta
         cursor.execute(
             f"SELECT CODIGO_CORTO, PERIODO FROM CICLOS WHERE CODIGO_CORTO LIKE '{datetime.now().year}%'"
         )
 
         listHeaders = utils.FirebirdGetHeaders(cursor.description)
-
         listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
 
-        resultadoDataFields[listHeaders[0]] = listValues
+        return listValues
 
-        # ? MES
-        listHeaders = ["mes"]
-        listValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-        resultadoDataFields[listHeaders[0]] = listValues
-
-        # ? GRUPOS --> 1010 ARQ
-        # ! BUSCAR TABLA EN DONDE SOLO HAYA GRUPOS
-        cursor.execute("SELECT FIRST 200 CODIGOGRUPO FROM ALUMNOS_GRUPOS")
-        # cursor.execute("SELECT CODIGOGRUPO FROM ALUMNOS_GRUPOS")
+def CargarCarreras(periodo):
+    # ? NIVELES --> Carreras
+    # ! BUSCAR TABLA EN DONDE SOLO HAYA NIVELES
+    with cursor:
+        cursor.execute(f"SELECT DISTINCT NIVEL FROM GRUPOS WHERE PERIODO = {periodo}")
 
         listHeaders = utils.FirebirdGetHeaders(cursor.description)
+        listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
 
-        listValues = utils.FirebirdFilterDuplicates(cursor.fetchall())
+        return listValues
 
-        resultadoDataFields[listHeaders[0]] = listValues
 
-        return resultadoDataFields
+def CargarGrupos(periodo, nivel):
+    # ? GRUPOS --> 1010 ARQ
+    with cursor:
+        cursor.execute(
+            f"SELECT CODIGOGRUPO FROM GRUPOS WHERE PERIODO = {periodo} AND NIVEL = '{nivel}'"
+        )
+
+        listHeaders = utils.FirebirdGetHeaders(cursor.description)
+        listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
+
+        return listValues
+
+
+def CargarMeses():
+    resultadoDataFields = {}
+
+    listHeaders = ["mes"]
+    listValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    resultadoDataFields[listHeaders[0]] = listValues
+
+    return resultadoDataFields

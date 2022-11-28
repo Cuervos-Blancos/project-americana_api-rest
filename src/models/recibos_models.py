@@ -1,7 +1,46 @@
-from operator import truediv
 from config import cursor
+import utils
 
 
+def GenerarTickets(nivel, codigogrupo, periodo, mes):
+    with cursor:
+        cursor.execute(
+            f"""SELECT
+                    ALUMNOS_CXC.NUMEROALUMNO, 
+                    ALUMNOS_CXC.REFERENCIA, 
+                    ALUMNOS_CXC.FECHA_SP1, 
+                    ALUMNOS_CXC.CANTIDADPROGRAMADA, 
+                    ALUMNOS_CXC.REFERENCIA2, 
+                    ALUMNOS_CXC.FECHA_SP2, 
+                    ALUMNOS_CXC.MES,
+                    --ALUMNOS_GRUPOS.NUMEROALUMNO, 
+                    ALUMNOS_GRUPOS.CODIGOGRUPO, 
+                    ALUMNOS_GRUPOS.PERIODO,
+                    --ALUMNOS.NUMEROALUMNO, 
+                    ALUMNOS.NOMBRE, 
+                    ALUMNOS.MATERNO, 
+                    ALUMNOS.PATERNO,
+                    ALUMNOS.NIVEL
+                FROM (
+                    (ALUMNOS_CXC INNER JOIN ALUMNOS_GRUPOS ON ALUMNOS_CXC.NUMEROALUMNO = ALUMNOS_GRUPOS.NUMEROALUMNO)
+                        INNER JOIN ALUMNOS ON ALUMNOS_CXC.NUMEROALUMNO = ALUMNOS.NUMEROALUMNO)
+                    WHERE ALUMNOS_GRUPOS.CODIGOGRUPO='{codigogrupo}'
+                    AND ALUMNOS.NIVEL = '{nivel}'
+                    AND ALUMNOS_GRUPOS.PERIODO= {periodo}
+                    AND ALUMNOS_CXC.PERIODO= {periodo}
+                    AND ALUMNOS_CXC.MES = {mes} """
+        )
+
+        listHeaders = []
+        listValues = []
+
+        listHeaders = utils.FirebirdGetHeaders(cursor.description)
+        listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
+
+        return listValues
+
+
+""" 
 def GenerarTickets(nivel, codigogrupo, periodo, mes):
     with cursor:
 
@@ -62,7 +101,7 @@ def GenerarTickets(nivel, codigogrupo, periodo, mes):
                 dic[headersAlumnosCxc[indice]] = valor
             valuesAlumnosCxc.append(dic)
 
-        # ? MERGES    
+        # ? MERGES
         # * merged alumnos - alumnos_grupos
         mergedValues = []
         for item in valuesAlumnos:
@@ -93,3 +132,4 @@ def GenerarTickets(nivel, codigogrupo, periodo, mes):
                 pass
 
     return ticketsValues
+ """
