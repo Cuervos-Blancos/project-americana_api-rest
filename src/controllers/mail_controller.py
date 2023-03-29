@@ -38,20 +38,25 @@ def EnviarEmail(
     # email.add_alternative("""<h1 style="color:red;">Test de html<h1>""", subtype="html")
     email.add_alternative(cuerpo, subtype="html")
 
-    """ with open("src/img/americana_logo.png", "rb") as f:
-        email.add_attachment(
-            f.read(), maintype="image", subtype="png", filename="americana_logo.png"
-        ) """
-
     contexto = ssl.create_default_context()
 
     """ El servidor smtp y el puerto smtp depende del servidor de correo electronico que usemos """
-    with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
+    """ with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
         # print(email_emisor, contrasena_emisor)
         server.starttls(context=contexto)
-
         server.login(email_emisor, contrasena_emisor)
-        server.sendmail(email_emisor, email_receptor, email.as_string())
+        server.sendmail(email_emisor, email_receptor, email.as_string()) """
+
+    try:
+        with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
+            server.starttls(context=contexto)
+            server.login(email_emisor, contrasena_emisor)
+            server.sendmail(email_emisor, email_receptor, email.as_string())
+
+            return "ok"
+    except Exception as e:
+        print("error al enviar ticket de pago: ", e)
+        return "error"
 
 
 def GenerarHTML(

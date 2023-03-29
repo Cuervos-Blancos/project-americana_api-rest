@@ -1,4 +1,5 @@
 # IMPORTACIONES
+from http.client import HTTPException
 from flask import Flask, jsonify
 from flask_cors import CORS
 import os
@@ -7,6 +8,7 @@ from routes.datafields_routes import datafieldsRoutes
 from routes.recibos_routes import recibosRoutes
 from routes.mobile_routes import mobileRoutes
 from routes.mail_routes import mailRoutes
+from routes.logIn_routes import logInRoutes
 
 
 # CONFIGURACIONES E INICIO
@@ -23,10 +25,19 @@ else:
 # ERROR 404
 @application.errorhandler(404)
 def route_not_found(err):
-    return jsonify({"message": "Route not found"}), 404
+    return jsonify({"message": "Ruta no encontrada"}), 404
 
 
-# ERROR 405
+# OTROS ERRORES
+@application.errorhandler(Exception)
+def handle_exception(e):
+    # pass through HTTP errors
+    if isinstance(e, HTTPException):
+        return jsonify({"Ha ocurrido el error ": e}), 500
+
+    """ # now you're handling non-HTTP exceptions only
+    return render_template("500_generic.html", e=e), 500 """
+
 
 # INDEX ROUTE
 @application.route("/", methods=["GET"])
@@ -49,3 +60,4 @@ application.register_blueprint(recibosRoutes)
 application.register_blueprint(datafieldsRoutes)
 application.register_blueprint(mobileRoutes)
 application.register_blueprint(mailRoutes)
+application.register_blueprint(logInRoutes)

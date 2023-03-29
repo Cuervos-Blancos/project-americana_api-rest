@@ -36,16 +36,24 @@ def SeleccionarCien():
 def CargarCiclos():
     # ? CICLOS --> Ciclo: 2022/2023
     # ! SELECCIONO LOS QUE EMPIEZAN POR ESTE AÑO
-    with cursor:
-        #   Ejecutamos la consulta
-        cursor.execute(
-            f"SELECT CODIGO_CORTO, PERIODO FROM CICLOS WHERE CODIGO_CORTO LIKE '{datetime.now().year}%'"
-        )
+    try:
+        with cursor:
+            #   Ejecutamos la consulta
+            """cursor.execute(
+                f"SELECT CODIGO_CORTO, PERIODO FROM CICLOS WHERE CODIGO_CORTO LIKE '{datetime.now().year}%'"
+            )"""
 
-        listHeaders = utils.FirebirdGetHeaders(cursor.description)
-        listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
+            cursor.execute(
+                f"SELECT CODIGO_CORTO, PERIODO FROM CICLOS WHERE CODIGO_CORTO LIKE '2022%'"
+            )
 
-        return listValues
+            listHeaders = utils.FirebirdGetHeaders(cursor.description)
+            listValues = utils.MergeHeadersValues(listHeaders, cursor.fetchall())
+
+            return listValues
+    except Exception as e:
+        print(e)
+        return "error"
 
 
 def CargarCarreras(periodo):

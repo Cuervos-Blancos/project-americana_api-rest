@@ -9,7 +9,7 @@ mailRoutes = Blueprint("mail", __name__, url_prefix="/mail")
 @cross_origin()
 def EnviarEmail():
     parametros = request.json
-    Controller.EnviarEmail(
+    resp = Controller.EnviarEmail(
         parametros["email_emisor"],
         parametros["contrasena_emisor"],
         # parametros["servidor_smtp"],
@@ -26,5 +26,5 @@ def EnviarEmail():
         parametros["monto_atraso"],
         parametros["referencia_atraso"],
     )
-
-    return jsonify("ok"), 200
+    print(f"ticket de pago enviado : {resp}")
+    return jsonify(resp), 200
