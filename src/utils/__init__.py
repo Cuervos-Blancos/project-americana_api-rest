@@ -80,3 +80,27 @@ def FirebirdFilterDuplicates(listDuplicates: list) -> list:
         if item[0] not in resultado:
             resultado.append(item[0])
     return resultado
+
+
+def RemoveDuplicateDicts(l: list[dict]) -> list:
+    n_l = []
+    for i in l:
+        if i not in n_l:
+            n_l.append(i)
+
+    return n_l
+
+
+def RemoveDictsWithNull(l: list[dict]) -> list:
+    nl = []
+    bnd = True
+    for item in l:
+        for k in item:
+            if item[k] is None:
+                bnd = False
+
+        if bnd:
+            nl.append(item)
+        
+        bnd = True
+    return nl

@@ -2,37 +2,6 @@ from datetime import datetime
 from config import cursor
 import utils
 
-
-def SeleccionarCien():
-    with cursor:
-        try:
-            # Ejecutamos la consulta
-            cursor.execute(
-                " SELECT FIRST 100 NOMBRE, PATERNO, NUMEROALUMNO FROM ALUMNOS"
-            )
-
-            # Obtenemos los encabezados de la tabla
-            listHeaders = []
-            for elemento in cursor.description:
-                listHeaders.append(elemento[0])
-
-            resultadoCursor = cursor.fetchall()
-
-            # Guardamos los resultados
-            resultado = []
-            for item in resultadoCursor:
-                dic = {}
-                for indice, valor in enumerate(item):
-                    dic[listHeaders[indice]] = valor
-                resultado.append(dict(sorted(dic.items())))
-
-            # Retornamos
-            return resultado
-        except Exception as e:
-            print(e)
-            return e
-
-
 def CargarCiclos():
     # ? CICLOS --> Ciclo: 2022/2023
     # ! SELECCIONO LOS QUE EMPIEZAN POR ESTE AÑO

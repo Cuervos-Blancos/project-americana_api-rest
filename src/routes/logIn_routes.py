@@ -9,7 +9,7 @@ logInRoutes = Blueprint("login", __name__, url_prefix="/login")
 @cross_origin()
 def LogIn():
     parametros = request.json
-    resp = Controller.LogIn(parametros["email_emisor"], parametros["contrasena_emisor"])
+    resp = Controller.LogIn(parametros["username_email"], parametros["password"])
     if resp == "ok":
         return jsonify(resp), 200
     if resp == "error":

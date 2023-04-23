@@ -28,15 +28,12 @@ def route_not_found(err):
     return jsonify({"message": "Ruta no encontrada"}), 404
 
 
-# OTROS ERRORES
-@application.errorhandler(Exception)
-def handle_exception(e):
-    # pass through HTTP errors
-    if isinstance(e, HTTPException):
-        return jsonify({"Ha ocurrido el error ": e}), 500
+@application.errorhandler(500)
+def internal_server_err(err):
+    return jsonify({"message": "Ha ocurrido un error en el servidor"}), 500
 
-    """ # now you're handling non-HTTP exceptions only
-    return render_template("500_generic.html", e=e), 500 """
+
+# OTROS ERRORES
 
 
 # INDEX ROUTE

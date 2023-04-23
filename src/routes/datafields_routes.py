@@ -8,7 +8,9 @@ datafieldsRoutes = Blueprint("datafields", __name__, url_prefix="/datafields")
 @datafieldsRoutes.route("/", methods=["GET"])
 @cross_origin()
 def CargarDataFields():
-    return Controller.CargarDataFields()
+    return {
+        "rutas_disponibles": "['/ciclos','/carreras/<periodo>','/grupos/<periodo>/<nivel>','/meses']"
+    }
 
 
 @datafieldsRoutes.route("/ciclos", methods=["GET"])

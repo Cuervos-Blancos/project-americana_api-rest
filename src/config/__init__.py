@@ -52,12 +52,13 @@ if os.getenv("ENV") == "DEVELOPMENT":
     print("LOADED DEVELOPMENT DATABASE CONFIGURATION")
 else:
     # SIGNIFICA QUE ESTAMOS EN UN ENTORNO DE PRODUCCIÓN
-    print("PRODUCTION ENVIRONMENT")
     connection = firebirdsql.connect(
         host=os.getenv("HOST"),
         database=os.getenv("DATABASE"),
         user=os.getenv("USER"),
         password=os.getenv("PASSWORD"),
     )
+    print("! LOADEDPRODUCTION ENVIRONMENT")
+    print("*********************************************************")
 
 cursor = connection.cursor()
