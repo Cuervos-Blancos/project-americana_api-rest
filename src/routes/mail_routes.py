@@ -28,5 +28,5 @@ def EnviarEmail():
     )
     print(f"ticket de pago enviado : {resp}")"""
 
-    """ resp = "ok" """
+    resp = "ok"
     return jsonify(resp), 200

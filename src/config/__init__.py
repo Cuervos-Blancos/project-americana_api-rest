@@ -16,6 +16,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
+
 # CONFIGURACIÓN
 class Config:
     """Base config"""
@@ -58,7 +59,7 @@ else:
         user=os.getenv("USER"),
         password=os.getenv("PASSWORD"),
     )
-    print("! LOADEDPRODUCTION ENVIRONMENT")
+    print("! LOADED PRODUCTION ENVIRONMENT")
     print("*********************************************************")
 
 cursor = connection.cursor()
