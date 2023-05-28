@@ -1,77 +1,128 @@
 from email.message import EmailMessage
 import ssl
 import smtplib
-
+import json
 
 def EnviarEmail(
-    email_emisor,
-    contrasena_emisor,
-    servidor_smtp,
-    puerto_smtp,
-    email_receptor,
-    nombre_completo,
-    grupo,
-    fecha_pronto,
-    monto_pronto,
-    referencia_pronto,
-    fecha_atraso,
-    monto_atraso,
-    referencia_atraso,
+	email_emisor,
+	contrasena_emisor,
+	servidor_smtp,
+	puerto_smtp,
+	email_receptor,
+	nombre_completo,
+	grupo,
+	fecha_pronto,
+	monto_pronto,
+	referencia_pronto,
+	fecha_atraso,
+	monto_atraso,
+	referencia_atraso,
+	nivel,
+	codigogrupo,
+	periodo,
+	mes,
+	numeroalumno
 ):
-    cuerpo = GenerarHTML(
-        nombre_completo,
-        grupo,
-        email_receptor,
-        fecha_pronto,
-        monto_pronto,
-        referencia_pronto,
-        fecha_atraso,
-        monto_atraso,
-        referencia_atraso,
-    )
+	cuerpo = GenerarHTML(
+		nombre_completo,
+		grupo,
+		email_receptor,
+		fecha_pronto,
+		monto_pronto,
+		referencia_pronto,
+		fecha_atraso,
+		monto_atraso,
+		referencia_atraso,
+		mes
+	)
 
-    email = EmailMessage()
-    email["From"] = email_emisor
-    email["To"] = email_receptor
-    email["Subject"] = "Referencia de pago cuatrimestral"
+	email = EmailMessage()
+	email["From"] = email_emisor
+	email["To"] = email_receptor
+	email["Subject"] = "Referencia de pago cuatrimestral"
 
-    # email.add_alternative("""<h1 style="color:red;">Test de html<h1>""", subtype="html")
-    email.add_alternative(cuerpo, subtype="html")
+	# email.add_alternative("""<h1 style="color:red;">Test de html<h1>""", subtype="html")
+	email.add_alternative(cuerpo, subtype="html")
 
-    contexto = ssl.create_default_context()
+	contexto = ssl.create_default_context()
 
-    """ El servidor smtp y el puerto smtp depende del servidor de correo electronico que usemos """
-    """ with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
-        # print(email_emisor, contrasena_emisor)
-        server.starttls(context=contexto)
-        server.login(email_emisor, contrasena_emisor)
-        server.sendmail(email_emisor, email_receptor, email.as_string()) """
+	""" El servidor smtp y el puerto smtp depende del servidor de correo electronico que usemos """
+	""" with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
+		# print(email_emisor, contrasena_emisor)
+		server.starttls(context=contexto)
+		server.login(email_emisor, contrasena_emisor)
+		server.sendmail(email_emisor, email_receptor, email.as_string()) """
+	
+	# obtiene el log 
+	with open(f"log_files/{nivel}_{codigogrupo}_{periodo}_{mes}.json", "r") as openFile:
+		json_object = json.load(openFile)
+		
+	for alumno in json_object:
+		if(alumno["numeroalumno"] == numeroalumno):
+			i = json_object.index(alumno)
+			a = json_object[i]
+			break
 
-    try:
-        with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
-            server.starttls(context=contexto)
-            server.login(email_emisor, contrasena_emisor)
-            server.sendmail(email_emisor, email_receptor, email.as_string())
+	try:
+		with smtplib.SMTP(servidor_smtp, puerto_smtp) as server:
+			server.starttls(context=contexto)
+			server.login(email_emisor, contrasena_emisor)
+			server.sendmail(email_emisor, email_receptor, email.as_string())
+		
+			# modifica el log
+			a["enviado"] == "ok"
+			json_object[i] = a
 
-            return "ok"
-    except Exception as e:
-        print("error al enviar ticket de pago: ", e)
-        return "error"
+			json_object = json.dumps(json_object, indent=4)
+			with open(f"log_files/{nivel}_{codigogrupo}_{periodo}_{mes}.json", "w") as outfile:
+				outfile.write(json_object)
+			
+		return "ok"
+	
+	except Exception as e:
+		# modifica el log
+		a["enviado"] = "error"
+		json_object[i] = a
+		print(json_object[i])
+		
+		json_object = json.dumps(json_object, indent=4)
+		with open(f"log_files/{nivel}_{codigogrupo}_{periodo}_{mes}.json", "w") as outfile:
+			outfile.write(json_object)
+		
+		print("error al enviar ticket de pago: ", e)
+		return "error"
 
 
 def GenerarHTML(
-    nombre_completo,
-    grupo,
-    correo_institucional,
-    fecha_pronto,
-    monto_pronto,
-    referencia_pronto,
-    fecha_atraso,
-    monto_atraso,
-    referencia_atraso,
+	nombre_completo,
+	grupo,
+	correo_institucional,
+	fecha_pronto,
+	monto_pronto,
+	referencia_pronto,
+	fecha_atraso,
+	monto_atraso,
+	referencia_atraso,
+	mes
 ):
-    html = (
-        """
+	
+	meses = {
+	1:"SEPTIEMBRE",
+	 2:"OCTUBRE",
+	 3:"NOVIEMBRE",
+	 4:"DICIEMBRE",
+	 5:"ENERO",
+	 6:"FEBRERO",
+	 7:"MARZO",
+	 8:"ABRIL",
+	 9:"MAYO",
+	 10:"JUNIO",
+	 11:"JULIO",
+	 12:"AGOSTO"
+	}
+	
+	html = (
+		"""
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -246,8 +297,8 @@ def GenerarHTML(
 			}
 		</style>
 	</head> 
-    """
-        + f"""
+	"""
+		+ f"""
 	<body>
 		<div class="container">
 			<div class="cabecera">
@@ -336,7 +387,7 @@ def GenerarHTML(
 
 			<div class="pie-pagina">
 				<p class="texto">
-					VIGENCIA HASTA EL ULTIMO DÍA DEL MES DE OCTUBRE
+					VIGENCIA HASTA EL ULTIMO DÍA DEL MES DE {meses[mes]}
 				</p>
 				<p class="texto">RECARGOS POSTERIORES SEGÚN FECHA DE PAGO</p>
 				<p class="texto">
@@ -366,5 +417,6 @@ def GenerarHTML(
 
 
 """
-    )
-    return html
+	)
+	
+	return html

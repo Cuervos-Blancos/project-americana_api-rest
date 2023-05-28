@@ -17,20 +17,20 @@ application = Flask(__name__)
 cors = CORS(application, resources={r"/*": {"origins": "*"}})
 
 if os.getenv("ENV") == "DEVELOPMENT":
-    application.config.from_object(config.DevelopmentConfig)
+	application.config.from_object(config.DevelopmentConfig)
 else:
-    application.config.from_object(config.ProductionConfig)
+	application.config.from_object(config.ProductionConfig)
 
 
 # ERROR 404
 @application.errorhandler(404)
 def route_not_found(err):
-    return jsonify({"message": "Ruta no encontrada"}), 404
+	return jsonify({"message": "Ruta no encontrada"}), 404
 
 
 @application.errorhandler(500)
 def internal_server_err(err):
-    return jsonify({"message": "Ha ocurrido un error en el servidor"}), 500
+	return jsonify({"message": "Ha ocurrido un error en el servidor"}), 500
 
 
 # OTROS ERRORES
@@ -39,17 +39,17 @@ def internal_server_err(err):
 # INDEX ROUTE
 @application.route("/", methods=["GET"])
 def Home():
-    return (
-        jsonify(
-            {
-                "name": "rest_api_python3-firebird",
-                "authors": ["Carlos C.", "Abarca Lopez"],
-                "description": "Modulo de RestApi del proyecto de automatización de envio de correos electronicos para la Americana",
-                "version": "0.1",
-            }
-        ),
-        200,
-    )
+	return (
+		jsonify(
+			{
+				"name": "rest_api_python3-firebird",
+				"authors": ["Carlos C.", "Abarca Lopez"],
+				"description": "Modulo de RestApi del proyecto de automatización de envio de correos electronicos para la Americana",
+				"version": "0.1",
+			}
+		),
+		200,
+	)
 
 
 # * ROUTES

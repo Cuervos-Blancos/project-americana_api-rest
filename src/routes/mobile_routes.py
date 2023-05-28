@@ -7,7 +7,7 @@ mobileRoutes = Blueprint("mobile", __name__, url_prefix="/mobile")
 @mobileRoutes.route("/<numeroalumno>", methods=["GET"])
 @cross_origin()
 def ObtenerCamposAlumno(numeroalumno):
-    
-    
+	
+	
 
-    return Controller.ObtenerCamposAlumno(numeroalumno)
+	return Controller.ObtenerCamposAlumno(numeroalumno)
